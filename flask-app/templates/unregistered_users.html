@@ -1,0 +1,8 @@
+{% extends "base.jinja2" %}
+{% block content %}
+<div class="container login-page-form">
+    <form id="login-form" action="/auth/unregistered" method="post">
+        <button type="submit" id="submit-button" class="btn btn-success">Send mail</button>
+    </form>
+</div>
+{% endblock %}
