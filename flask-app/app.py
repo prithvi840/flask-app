@@ -1,11 +1,14 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, session, request
 from user import User
 from common.database import Database
 import common.send_email as send_email
 
+load_dotenv(os.path.join(os.getcwd(), '.env'))
 
 app = Flask(__name__)
-app.secret_key = "prithvi"
+app.secret_key = os.getenv('secret_key')
 
 
 @app.before_first_request
