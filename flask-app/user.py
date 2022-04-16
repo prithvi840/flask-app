@@ -1,6 +1,5 @@
 from flask import session
-from common.database import Database
-from common.utils import Utils
+from common import Database, Utils
 import uuid
 
 

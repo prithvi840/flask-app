@@ -1,11 +1,13 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, render_template, session, request
 from user import User
-from common.database import Database
-import common.send_email as send_email
+from common import Database, send_email, SECRET_KEY
 
 
 app = Flask(__name__)
-app.secret_key = "prithvi"
+app.secret_key = SECRET_KEY
 
 
 @app.before_first_request
