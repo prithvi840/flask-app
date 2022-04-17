@@ -27,7 +27,7 @@ class User:
         if user is not None:
             return f"{email} already exists"
         if not Utils.email_is_valid(email):
-            return "Email is not in correct format"
+            raise ValueError("Format of email is incorrect")
 
         new_user = cls(email, password)
         new_user.save_to_mongo()

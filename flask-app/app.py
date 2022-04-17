@@ -1,9 +1,11 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask, render_template, session, request
+from flask import (
+    Flask, render_template, session, request, redirect, url_for
+)
 from user import User
-from common import Database, send_email, SECRET_KEY
+from common import Database, SendEmail, SECRET_KEY
 
 
 app = Flask(__name__)
@@ -32,10 +34,8 @@ def login_user():
 
     if User.login_valid(email, password):
         User.login(email)
-        send_email.send_email(session['email'])
-
     else:
-        session['email'] = None
+        return redirect(url_for('register_template'))
 
     return render_template('profile.html', email=session['email'])
 
@@ -52,6 +52,8 @@ def register_user():
 
     User.register(email, password)
     session['email'] = email
+    with SendEmail():
+            SendEmail.signup_email(session['email'])
 
     return render_template('profile.html', email=session['email'])
 
@@ -64,7 +66,8 @@ def registered_email_template():
 @app.route('/auth/registered', methods=['POST'])
 def send_mail_to_registered():
     emails = Database.find(collection="users", query={})
-    send_email.send_emails_registered(emails, "Greetings")
+    with SendEmail():
+        SendEmail.send_emails(emails, 'Discount offers')
 
     return "Emails sent successfully"
 
@@ -77,7 +80,8 @@ def unregistered_email_template():
 @app.route('/auth/unregistered', methods=['POST'])
 def send_mail_to_unregistered():
     emails = Database.find(collection="unregister", query={"email": {}})
-    send_email.send_emails_registered(emails, "Promotional offers")
+    with SendEmail():
+        SendEmail.send_emails(emails, 'Promotional Offers')
 
     return "Email sent successfully!!!"
 
